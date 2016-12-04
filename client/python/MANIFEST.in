@@ -1,0 +1,3 @@
+include expected-output.txt
+include positive-symbols.txt
+include README.md

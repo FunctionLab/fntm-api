@@ -1,1 +1,6 @@
-# fntm-api
+# FNTM API
+
+* [Instructions for template Python code](client/python/README.md)
+* [API reference](https://github.com/FunctionLab/fntm-api/wiki/API-reference)
+* [API examples](http://fntm-api.princeton.edu)
+* [FNTM website](http://fntm.princeton.edu)

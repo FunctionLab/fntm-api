@@ -1,0 +1,242 @@
+This script demonstrates how FNTM API can be called from Python to access FNTM data and computational methods.
+Examples 1-3 show how to query basic resources such as gene and context lists; Examples 4-9 show how to query
+functional networks and supporting datasets; and Examples 10-13 illustrate how to start and monitor functional
+prediction jobs.
+
+Started fntmapi.py at 2016-12-04 15:02:58.768895
+
+1. Get list of organisms supported by the API
+QUERY: http://fntm-api.princeton.edu/organisms
+RESPONSE:
+[u'Mus musculus']
+
+2. Get list of genes recognized by the API
+QUERY: http://fntm-api.princeton.edu/genes
+RESPONSE (first 10 symbols):
+[   u'0610007P14Rik',
+    u'0610008J02Rik',
+    u'0610009B22Rik',
+    u'0610009F21Rik',
+    u'0610009K14Rik',
+    u'0610009O20Rik',
+    u'0610010B08Rik',
+    u'0610010F05Rik',
+    u'0610010K14Rik',
+    u'0610011F06Rik']
+
+3. Get list of contexts (i.e., tissues) recognized by the API
+QUERY: http://fntm-api.princeton.edu/contexts
+RESPONSE (first 10 contexts):
+[   u'adipose tissue',
+    u'adrenal gland',
+    u'amygdala',
+    u'anterior olfactory nucleus',
+    u'appendage girdle complex',
+    u'archicortex',
+    u'ascending colon',
+    u'basal ganglion',
+    u'blood vessel',
+    u'bone element']
+
+4. Get network in brain tissue around PTGS2 gene
+QUERY: http://fntm-api.princeton.edu/networks/brain/ptgs2
+RESPONSE (first 3 genes in enumeration):
+[   {   u'descrip': u'heparin-binding EGF-like growth factor',
+        u'gs': False,
+        u'id': 15200,
+        u'query': False,
+        u'std_name': u'Hbegf',
+        u'sys_name': u'Hbegf'},
+    {   u'descrip': u'solute carrier family 20, member 1',
+        u'gs': False,
+        u'id': 20515,
+        u'query': False,
+        u'std_name': u'Slc20a1',
+        u'sys_name': u'Slc20a1'},
+    {   u'descrip': u'interleukin 6',
+        u'gs': True,
+        u'id': 16193,
+        u'query': False,
+        u'std_name': u'Il6',
+        u'sys_name': u'Il6'}]
+RESPONSE (first 5 edges):
+[   {   u'id': 35715, u'source': 0, u'target': 1, u'weight': 0.267175266646622},
+    {   u'id': 31393, u'source': 0, u'target': 2, u'weight': 0.2299694182377727},
+    {   u'id': 27264, u'source': 0, u'target': 3, u'weight': 0.5426046050745285},
+    {   u'id': 65972, u'source': 0, u'target': 4, u'weight': 0.2729036147698789},
+    {   u'id': 39049, u'source': 0, u'target': 5, u'weight': 0.3067308259769581}]
+
+5. Get network in brain tissue around PTGS2 and PARK7 genes
+QUERY: http://fntm-api.princeton.edu/networks/brain/ptgs2+park7
+RESPONSE (first 5 edges):
+[   {   u'id': 72520, u'source': 0, u'target': 1, u'weight': 0.0036138279481061687},
+    {   u'id': 45255, u'source': 0, u'target': 2, u'weight': 0.007591233349866399},
+    {   u'id': 89030, u'source': 0, u'target': 3, u'weight': 0.0033556996355112194},
+    {   u'id': 27157, u'source': 0, u'target': 4, u'weight': 0.00789870598044853},
+    {   u'id': 39049, u'source': 0, u'target': 5, u'weight': 0.3067308259769581}]
+
+6. Recompute edge weights of previous query with specified prior probability
+QUERY: http://fntm-api.princeton.edu/networks/brain/ptgs2+park7?prior=0.15
+RESPONSE (first 5 edges):
+[   {   u'id': 72520, u'source': 0, u'target': 1, u'weight': 0.005727433823214942},
+    {   u'id': 45255, u'source': 0, u'target': 2, u'weight': 0.012003065865143046},
+    {   u'id': 89030, u'source': 0, u'target': 3, u'weight': 0.00531914092741702},
+    {   u'id': 27157, u'source': 0, u'target': 4, u'weight': 0.012486985365427864},
+    {   u'id': 39049, u'source': 0, u'target': 5, u'weight': 0.4126977168124173}]
+
+7. Subset previous network around the 10 most connected genes
+QUERY: http://fntm-api.princeton.edu/networks/brain/ptgs2+park7?prior=0.15&size=10
+RESPONSE (first 5 edges):
+[   {   u'id': 72520, u'source': 0, u'target': 1, u'weight': 0.005727433823214942},
+    {   u'id': 45255, u'source': 0, u'target': 2, u'weight': 0.012003065865143046},
+    {   u'id': 81695, u'source': 0, u'target': 3, u'weight': 0.001130662551759665},
+    {   u'id': 34425, u'source': 0, u'target': 4, u'weight': 0.9448460289374775},
+    {   u'id': 81794, u'source': 0, u'target': 5, u'weight': 0.0016453053055869456}]
+
+8. Get datasets supporting PTGS2-PARK7 interaction in brain
+QUERY: http://fntm-api.princeton.edu/evidence/brain?source=ptgs2&target=park7
+RESPONSE (top 3 datasets):
+[   {   u'dataset': u'mousephenotype',
+        u'description': u'MGI Gene-Phenotype Associations',
+        u'link': u'http://www.informatics.jax.org/',
+        u'posterior': 0.028422574079682295,
+        u'slug': u'mousephenotype',
+        u'title': u'MGI Gene-Phenotype Associations',
+        u'urltype': u''},
+    {   u'dataset': u'GDS2816',
+        u'description': u'Ras-GRF1 deficiency effect on the hippocampus',
+        u'link': u'',
+        u'posterior': 0.00655127168230199,
+        u'slug': u'gds2816',
+        u'title': u'Ras-GRF1 deficiency effect on the hippocampus',
+        u'urltype': u''},
+    {   u'dataset': u'GDS2314',
+        u'description': u'Antenatal steroid effect on the placenta',
+        u'link': u'',
+        u'posterior': 0.006201140686808021,
+        u'slug': u'gds2314',
+        u'title': u'Antenatal steroid effect on the placenta',
+        u'urltype': u''}]
+
+9. Recompute previous dataset posteriors using updated prior
+QUERY: http://fntm-api.princeton.edu/evidence/brain?source=ptgs2&target=park7&prior=0.15
+RESPONSE (top 3 datasets):
+[   {   u'dataset': u'mousephenotype',
+        u'description': u'MGI Gene-Phenotype Associations',
+        u'link': u'http://www.informatics.jax.org/',
+        u'posterior': 0.03963939459655308,
+        u'slug': u'mousephenotype',
+        u'title': u'MGI Gene-Phenotype Associations',
+        u'urltype': u''},
+    {   u'dataset': u'GDS2816',
+        u'description': u'Ras-GRF1 deficiency effect on the hippocampus',
+        u'link': u'',
+        u'posterior': 0.009247311743504183,
+        u'slug': u'gds2816',
+        u'title': u'Ras-GRF1 deficiency effect on the hippocampus',
+        u'urltype': u''},
+    {   u'dataset': u'GDS2314',
+        u'description': u'Antenatal steroid effect on the placenta',
+        u'link': u'',
+        u'posterior': 0.008754788376087341,
+        u'slug': u'gds2314',
+        u'title': u'Antenatal steroid effect on the placenta',
+        u'urltype': u''}]
+
+10. Predict genes functionally related to a given set of genes
+URL: http://fntm-api.princeton.edu/funpred/jobs
+PARAMETERS: {'email': '', 'context': 'brain', 'title': 'FNTM API Python Demo'}
+GENE FILE: positive-symbols.txt
+RESPONSE:
+{   u'context': u'brain',
+    u'created': u'2016-12-04T20:03:10.875942Z',
+    u'email': u'',
+    u'gene_file': u'http://fntm-api.princeton.edu/media/funpred/uploads/9c016f87-c309-450e-a76b-453d70dbe7d0/positive-symbols.txt',
+    u'id': u'9c016f87-c309-450e-a76b-453d70dbe7d0',
+    u'log_file': None,
+    u'result_file': None,
+    u'status': u'queued',
+    u'title': u'FNTM API Python Demo'}
+
+Wait 10 s for functional prediction job to complete on FNTM server
+..........
+
+
+11. Check status of previous functional prediction job
+QUERY: http://fntm-api.princeton.edu/funpred/jobs/9c016f87-c309-450e-a76b-453d70dbe7d0
+RESPONSE:
+{   u'context': u'brain',
+    u'created': u'2016-12-04T20:03:10Z',
+    u'email': u'',
+    u'gene_file': u'http://fntm-api.princeton.edu/media/funpred/uploads/9c016f87-c309-450e-a76b-453d70dbe7d0/positive-symbols.txt',
+    u'id': u'9c016f87-c309-450e-a76b-453d70dbe7d0',
+    u'log_file': u'http://fntm-api.princeton.edu/media/funpred/results/9c016f87-c309-450e-a76b-453d70dbe7d0/log.txt',
+    u'result_file': u'http://fntm-api.princeton.edu/media/funpred/results/9c016f87-c309-450e-a76b-453d70dbe7d0/result.txt',
+    u'status': u'completed',
+    u'title': u'FNTM API Python Demo'}
+
+12. Check SVM progress of previous functional prediction job
+QUERY: http://fntm-api.princeton.edu/media/funpred/results/9c016f87-c309-450e-a76b-453d70dbe7d0/log.txt
+RESPONSE:
+Reading genes
+NEW Class array
+Cross Validation Trial 0
+SLACK NORM =1
+ALG=3
+Learned
+Classified 28 examples
+NEW Class array
+Cross Validation Trial 1
+SLACK NORM =1
+ALG=3
+Learned
+Classified 23 examples
+NEW Class array
+Cross Validation Trial 2
+SLACK NORM =1
+ALG=3
+Learned
+Classified 39 examples
+NEW Class array
+Cross Validation Trial 3
+SLACK NORM =1
+ALG=3
+Learned
+Classified 28 examples
+NEW Class array
+Cross Validation Trial 4
+SLACK NORM =1
+ALG=3
+Learned
+Classified 27 examples
+
+13. Check prediction results of previous functional prediction job
+QUERY: http://fntm-api.princeton.edu/media/funpred/results/9c016f87-c309-450e-a76b-453d70dbe7d0/result.txt
+RESPONSE (first 25 lines):
+##################################################################################
+# FNTM Functional Prediction Results
+#
+# Job id:       9c016f87-c309-450e-a76b-453d70dbe7d0
+# Job title:    FNTM API Python Demo
+# Email:        
+# Created:      2016-12-04 20:03:10 UTC
+# Gene file:    positive-symbols.txt
+# Context:      brain
+#
+# FNTM website: http://fntm.princeton.edu
+##################################################################################
+Cfl1	0	0.999007
+Dnmt3a	0	0.878461
+Bcl2l1	0	0.768153
+Twist1	0	0.763058
+Myc	0	0.728926
+Mmp2	0	0.678909
+Pdgfra	0	0.672726
+Socs1	0	0.65606
+Col4a1	0	0.654089
+Ticam2	-1	0.635697
+Il18	-1	0.635697
+Schip1	0	0.631175
+Sgpl1	0	0.629526
+
+Completed fntmapi.py at 2016-12-04 15:03:25.383109
