@@ -1,6 +1,6 @@
-# FNTM API Python Demo
+# FNTM API template Python code
 
-## Get client code from GitHub or from source distribution
+## Get template code from GitHub or from source distribution
 
 **GitHub**
 
@@ -19,9 +19,9 @@ cd fntmapi-1.0.0
 
 ## Install dependencies
 
-The only external depedency required by the template code is the **requests** library. If this is already installed on your system, this section can be skipped.
+The only external depedency required by the template code is the **requests** library. If this is already installed on your system, you can skip this section.
 
-The recommended way of installing **requests** is by using a virtual environment.
+The recommended way of installing **requests** is in a virtual environment.
 
 ```
 virtualenv env
@@ -29,7 +29,7 @@ source env/bin/activate
 python setup.py install
 ```
 
-Alternatively, you can install **requests** to the site-packages directory in your user account.
+Alternatively, you can install **requests** to the site-packages directory of your user account.
 
 ```
 python setup.py install --user --prefix=
