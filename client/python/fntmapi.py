@@ -139,26 +139,38 @@ j = r.json()
 print "RESPONSE:"
 pp.pprint(j)
 print
-time.sleep(1)
-
-print "12. Check SVM progress of previous functional prediction job"
-q = j['log_file']
-print "QUERY:", q
+time.sleep(10)
 r = requests.get(q)
-#j = r.json()
+j = r.json()
+
+#
+print "12. Check SVM progress of previous functional prediction job"
+log_q = j['log_file']
+print "QUERY:", log_q
+log_r = requests.get(log_q)
 print "RESPONSE:"
-print r.text
+print log_r.text
 time.sleep(1)
 
 print "13. Check prediction results of previous functional prediction job"
-q = j['result_file']
-print "QUERY:", q
+print "Wait for 3 mins for the job to complete on FNTM server"
+time.sleep(60)
+print '#'
+time.sleep(60)
+print '#'
+time.sleep(60)
+print '#'
 r = requests.get(q)
-#j = r.json()
-print "RESPONSE (first 25 lines):"
-print "\n".join(r.text.splitlines()[0:25])
-print
-time.sleep(1)
+j = r.json()
+result_q = j['result_file']
+print "QUERY:", result_q
+if result_q:
+	r = requests.get(result_q)
+	print "RESPONSE (first 25 lines):"
+	print "\n".join(r.text.splitlines()[0:25])
+	print
+else:
+	print 'No result file yet'
 
 # End demo
 print "Completed {0} at {1}".format(sys.argv[0], datetime.datetime.now())
